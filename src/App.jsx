@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -17,7 +17,6 @@ import RoleRoute from "./routes/RoleRoute";
 
 export default function App() {
   return (
-    <BrowserRouter>
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
@@ -90,6 +89,5 @@ export default function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
   );
 }
