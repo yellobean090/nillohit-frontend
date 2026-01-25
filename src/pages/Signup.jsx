@@ -1,7 +1,7 @@
 // src/pages/Signup.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../services/api";
+import { AuthAPI } from "../services/api";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function Signup() {
       setLoading(true);
 
       // IMPORTANT: if your backend route is different (register), change it here
-      const res = await api.post("/api/auth/signup", {
+      const res = await AuthAPI.signup({
         username,
         email,
         password,

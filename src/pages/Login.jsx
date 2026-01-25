@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { api } from "../services/api";
+import { AuthAPI } from "../services/api";
 import { useAuth } from "../context/useAuth";
 
 export default function Login() {
@@ -30,7 +30,7 @@ export default function Login() {
       setBusy(true);
 
       // Expected backend: POST /api/auth/login => { token, user }
-      const res = await api.post("/api/auth/login", {
+      const res = await AuthAPI.login({
         email: e1,
         password: p1,
       });
