@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fafc;
+}
+
+/* Shared card UI */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 320px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+/* Buttons */
+.btn {
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn:hover {
+  background: #1e40af;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+}
+
+/* Headings */
+h1, h2 {
+  color: #1e3a8a;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Layout helpers */
+.center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-item {
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #14b8a6;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 6px;
+}
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
