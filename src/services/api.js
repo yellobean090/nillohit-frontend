@@ -8,7 +8,12 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// Automatically attach token (if you use token auth)
+// ✅ Backward-compatible aliases (your existing code imports these)
+export const DoerAPI = api;
+export const ProviderAPI = api;
+export const AdminAPI = api;
+
+// Attach token automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
