@@ -1,39 +1,40 @@
 import axios from "axios";
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://localhost:5000";
+// In Vercel you MUST set VITE_API_URL to your Railway backend base URL
+// Example: https://nillohit-backend-production.up.railway.app
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export const api = axios.create({
-  baseURL: `${BASE_URL}/api`,
-  withCredentials: true,
+  baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-// ---- Auth ----
+// Attach token automatically (if you store it)
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// ---- APIs (Exports expected by your pages) ----
 export const AuthAPI = {
-  signup: (payload) => api.post("/auth/signup", payload),
-  login: (payload) => api.post("/auth/login", payload),
-  me: () => api.get("/auth/me"),
-  logout: () => api.post("/auth/logout"),
+  signup: (data) => api.post("/api/auth/signup", data),
+  login: (data) => api.post("/api/auth/login", data),
+  me: () => api.get("/api/auth/me"),
 };
 
-// ---- User/Doer ----
 export const DoerAPI = {
-  dashboard: () => api.get("/user/dashboard"),
-  tasks: () => api.get("/tasks"),
-  submitProof: (payload) => api.post("/submissions", payload),
+  listTasks: () => api.get("/api/tasks"),
+  submitProof: (payload) => api.post("/api/submissions", payload),
 };
 
-// ---- Provider ----
 export const ProviderAPI = {
-  myTasks: () => api.get("/tasks/provider"),
-  bulkCreate: (payload) => api.post("/tasks/provider/bulk", payload),
-  review: () => api.get("/submissions/provider"),
-  approveReject: (id, payload) => api.patch(`/submissions/${id}`, payload),
+  createTasksBulk: (payload) => api.post("/api/tasks/provider/bulk", payload),
+  reviewSubmissions: () => api.get("/api/submissions/provider"),
+  approveSubmission: (id, payload) => api.post(`/api/submissions/${id}/approve`, payload),
 };
 
-// ---- Admin ----
 export const AdminAPI = {
-  stats: () => api.get("/admin/stats"),
-  users: () => api.get("/admin/users"),
+  listUsers: () => api.get("/api/admin/users"),
+  setRole: (userId, role) => api.patch(`/api/admin/users/${userId}/role`, { role }),
 };
