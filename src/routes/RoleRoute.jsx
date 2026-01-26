@@ -1,19 +1,29 @@
-import React from "react";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { UserAPI } from "../services/api";
 
 export default function RoleRoute({ role, children }) {
-  const { user, loading } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [me, setMe] = useState(null);
+  const [error, setError] = useState("");
 
-  if (loading) return <div style={{ padding: 20 }}>Loading...</div>;
-  if (!user) return <div style={{ padding: 20 }}>Not logged in.</div>;
+  useEffect(() => {
+    UserAPI.profile()
+      .then((res) => setMe(res.data))
+      .catch((err) => {
+        console.error("RoleRoute profile error:", err);
+        setError("Failed to load profile");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-  if (user.role !== role) {
-    return (
-      <div style={{ padding: 20 }}>
-        Access denied. Required role: <b>{role}</b>. Your role: <b>{user.role}</b>
-      </div>
-    );
-  }
+  if (loading) return <div style={{ padding: 30 }}>Loading...</div>;
+
+  if (error) return <div style={{ padding: 30 }}>{error}</div>;
+
+  if (!me) return <Navigate to="/login" replace />;
+
+  if (me.role !== role) return <Navigate to="/" replace />;
 
   return children;
 }

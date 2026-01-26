@@ -1,40 +1,42 @@
 import axios from "axios";
 
-// In Vercel you MUST set VITE_API_URL to your Railway backend base URL
-// Example: https://nillohit-backend-production.up.railway.app
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
+// Main axios client
 export const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL,
   headers: { "Content-Type": "application/json" },
 });
 
-// Attach token automatically (if you store it)
+// Attach token automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// ---- APIs (Exports expected by your pages) ----
+// Helpers (optional but nice)
 export const AuthAPI = {
-  signup: (data) => api.post("/api/auth/signup", data),
-  login: (data) => api.post("/api/auth/login", data),
-  me: () => api.get("/api/auth/me"),
+  signup: (payload) => api.post("/api/auth/signup", payload),
+  login: (payload) => api.post("/api/auth/login", payload),
 };
 
+export const UserAPI = {
+  profile: () => api.get("/api/user/profile"),
+};
+
+// ✅ so your other pages can import { DoerAPI }
 export const DoerAPI = {
   listTasks: () => api.get("/api/tasks"),
   submitProof: (payload) => api.post("/api/submissions", payload),
 };
 
 export const ProviderAPI = {
-  createTasksBulk: (payload) => api.post("/api/tasks/provider/bulk", payload),
-  reviewSubmissions: () => api.get("/api/submissions/provider"),
-  approveSubmission: (id, payload) => api.post(`/api/submissions/${id}/approve`, payload),
+  reviewSubmissions: () => api.get("/api/submissions"),
+  approveSubmission: (id) => api.patch(`/api/submissions/${id}/approve`),
+  rejectSubmission: (id) => api.patch(`/api/submissions/${id}/reject`),
 };
 
 export const AdminAPI = {
   listUsers: () => api.get("/api/admin/users"),
-  setRole: (userId, role) => api.patch(`/api/admin/users/${userId}/role`, { role }),
 };
