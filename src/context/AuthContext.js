@@ -1,48 +1,49 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { api } from "../services/api";
+// src/context/AuthContext.js
+import React, { createContext, useMemo, useState } from "react";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const loadMe = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setUser(null);
-        return;
-      }
-
-      // ✅ you need a /api/user/me endpoint for this
-      const res = await api.get("/api/user/me");
-      setUser(res.data.user || res.data);
-    } catch (e) {
-      localStorage.removeItem("token");
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadMe();
-    // eslint-disable-next-line
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, setUser, loading, logout, reload: loadMe }}>
-      {children}
-    </AuthContext.Provider>
-  );
+function safeJsonParse(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
+export function AuthProvider({ children }) {
+  // ✅ initialize from localStorage WITHOUT useEffect
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? safeJsonParse(savedUser) : null;
+  });
+
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || null;
+  });
+
+  const login = ({ user: userData, token: tokenValue }) => {
+    setUser(userData || null);
+    setToken(tokenValue || null);
+
+    if (userData) localStorage.setItem("user", JSON.stringify(userData));
+    else localStorage.removeItem("user");
+
+    if (tokenValue) localStorage.setItem("token", tokenValue);
+    else localStorage.removeItem("token");
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
+  const value = useMemo(
+    () => ({ user, token, login, logout, setUser, setToken }),
+    [user, token]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
