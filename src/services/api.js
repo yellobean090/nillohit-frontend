@@ -22,3 +22,14 @@ export const AuthAPI = {
 export const UserAPI = {
   profile: () => api.get("/api/user/profile"),
 };
+export const DoerAPI = {
+  liveTasks: () => api.get("/api/doer/tasks/live"),
+  claimTask: (taskId) => api.post(`/api/doer/tasks/${taskId}/claim`),
+  myTasks: () => api.get("/api/doer/tasks/my"),
+  submitProof: (taskId, payload) =>
+    api.post(`/api/doer/tasks/${taskId}/submit-proof`, payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  wallet: () => api.get("/api/doer/wallet"),
+  requestWithdrawal: (payload) => api.post("/api/doer/withdrawals", payload),
+};
