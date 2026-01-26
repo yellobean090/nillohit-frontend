@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { AuthAPI } from "../services/api";
-import { useAuth } from "../context/useAuth";
+import  useAuth  from "../context/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();

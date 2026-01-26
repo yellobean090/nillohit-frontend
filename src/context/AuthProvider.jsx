@@ -1,7 +1,5 @@
-// src/context/AuthContext.js
-import React, { createContext, useMemo, useState } from "react";
-
-export const AuthContext = createContext(null);
+import React, { useMemo, useState } from "react";
+import { AuthContext } from "./AuthContext.jsx";
 
 function safeJsonParse(value) {
   try {
