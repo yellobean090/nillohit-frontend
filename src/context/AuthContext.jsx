@@ -1,14 +1,7 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { AuthContext } from "./authContext.config";
+import { safeJsonParse } from "./authUtils";
 
-export const AuthContext = createContext(null);
-
-export function safeJsonParse(value) {
-  try {
-    return JSON.parse(value);
-  } catch {
-    return null;
-  }
-}
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
